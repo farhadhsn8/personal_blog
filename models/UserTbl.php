@@ -14,7 +14,7 @@ use Yii;
  * @property string|null $authKey
  * @property string|null $accessToken
  */
-class UserTbl extends \yii\db\ActiveRecord
+class UserTbl extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
     /**
      * {@inheritdoc}
@@ -30,8 +30,12 @@ class UserTbl extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'email'], 'string', 'max' => 80],
-            [['password', 'authKey', 'accessToken'], 'string', 'max' => 255],
+            [['username' ,'email'] , 'string', 'max' => 80],
+            [['username' ,'email'] , 'required'],
+            [['username' ,'email'] , 'unique'],
+            [['email'] , 'email'],
+            [[ 'authKey', 'accessToken'], 'string', 'max' => 255],
+            [['password'] , 'string', 'max' => 255  ]
         ];
     }
 
@@ -47,4 +51,40 @@ class UserTbl extends \yii\db\ActiveRecord
 
         ];
     }
+
+    public static function findIdentity($id)
+    {
+        return self::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token , $type=null)
+    {
+        return self::findOne(['accessToken' => $token]);
+    }
+
+    public static function findByUsername($username)
+    {
+        return self::findOne(['username' => $username]);
+    }
+
+    public  function getId()
+    {
+        return $this->id;
+    }
+
+    public  function getAuthKey()
+    {
+        return $this->authKey;
+    }
+
+    public  function validateAuthKey($authKey)
+    {
+        return $this->authKey === $authKey;
+    }
+
+    public  function validatePassword($password)
+    {
+        return password_verify($password , $this->password);
+    }
+
 }
