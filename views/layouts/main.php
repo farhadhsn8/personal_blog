@@ -52,7 +52,11 @@ AppAsset::register($this);
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()
-            . '</li>');
+            . '</li>' ,
+            ['label' => 'Post', 'url' => ['/post']],
+            ['label' => 'Tag', 'url' => ['/tag']],
+            ['label' => 'Comment', 'url' => ['/comment']]
+        );
     }
 
     echo Nav::widget([
