@@ -4,6 +4,9 @@ namespace app\controllers;
 
 use app\models\Post;
 use app\models\PostSearch;
+use app\models\PostTag;
+use app\models\Tag;
+use yii\base\BaseObject;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -37,6 +40,8 @@ class PostController extends Controller
      */
     public function actionIndex()
     {
+
+
         $searchModel = new PostSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
@@ -67,18 +72,27 @@ class PostController extends Controller
     public function actionCreate()
     {
         $model = new Post();
-
+        $tags = (new \yii\db\Query())->select(['*'])->from('tag')->all();
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            $model->author_id = \Yii::$app->user->identity->id;
+            $model->created_at = date('Y-m-d H:i:s');
+            $model->load($this->request->post());
+            if ($model->save(false)) {
+                foreach ($this->request->post()['Post']['tags'] as $tag) {
+                    $post_tag = new PostTag([
+                        'post_id' => $model->id,
+                        'tag_id' => $tag,
+                        'created_at' => date('Y-m-d H:i:s')
+                    ]);
+                    $post_tag->save();
+                }
+                return $this->redirect('/index.php?r=post');
             }
         } else {
             $model->loadDefaultValues();
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        return $this->render('create', ['model' => $model, 'tags' => $tags]);
     }
 
     /**

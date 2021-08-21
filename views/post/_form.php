@@ -1,5 +1,6 @@
 <?php
 
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -11,6 +12,8 @@ use yii\widgets\ActiveForm;
 <div class="post-form">
 
     <?php $form = ActiveForm::begin(); ?>
+
+    <?= $form->field($model, 'tags')->checkBoxList(ArrayHelper::map($tags, 'id', 'title')) ?>
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 

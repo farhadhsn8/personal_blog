@@ -51,4 +51,14 @@ class Comment extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
         ];
     }
+
+    public function getAuthor()
+    {
+        return $this->hasOne(UserTbl::class, ['id' => 'author_id']);
+    }
+
+    public function getPost()
+    {
+        return $this->hasOne(UserTbl::class, ['id' => 'post_id']);
+    }
 }

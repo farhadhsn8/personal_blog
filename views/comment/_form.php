@@ -12,15 +12,7 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'author_id')->textInput() ?>
-
-    <?= $form->field($model, 'post_id')->textInput() ?>
-
     <?= $form->field($model, 'body')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'verified')->textInput() ?>
-
-    <?= $form->field($model, 'created_at')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

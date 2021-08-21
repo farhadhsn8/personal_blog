@@ -31,6 +31,7 @@ class Post extends \yii\db\ActiveRecord
         return [
 //            [['author_id'], 'required'],
 //            [['author_id'], 'integer'],
+            [['id'] , 'safe'],
             [['body'], 'string'],
             [['title'], 'string', 'max' => 255],
             [['title'] , 'required'],
@@ -47,5 +48,21 @@ class Post extends \yii\db\ActiveRecord
             'title' => 'Title',
             'body' => 'Body',
         ];
+    }
+
+    public function getComments()
+    {
+        return $this->hasMany(Comment::class, ['post_id' => 'id']);
+    }
+
+    public function getAuthor()
+    {
+        return $this->hasOne(UserTbl::class, ['id' => 'author_id']);
+    }
+
+    public function getTags()
+    {
+        return $this->hasMany(Tag::class, ['id' => 'tag_id'])
+            ->viaTable('post_tag', ['post_id' => 'id']);
     }
 }

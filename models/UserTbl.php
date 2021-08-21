@@ -87,4 +87,14 @@ class UserTbl extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return password_verify($password , $this->password);
     }
 
+    public function getComments()
+    {
+        return $this->hasMany(Comment::class, ['author_id' => 'id']);
+    }
+
+    public function getPosts()
+    {
+        return $this->hasMany(Post::class, ['author_id' => 'id']);
+    }
+
 }

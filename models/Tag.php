@@ -27,6 +27,7 @@ class Tag extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['id'], 'safe'],
             [['title'], 'required'],
             [['created_at'], 'safe'],
             [['title'], 'string', 'max' => 12],
@@ -44,5 +45,12 @@ class Tag extends \yii\db\ActiveRecord
             'title' => 'Title',
             'created_at' => 'Created At',
         ];
+    }
+
+
+    public function getPosts()
+    {
+        return $this->hasMany(Post::class, ['id' => 'post_id'])
+            ->viaTable('post_tag', ['tag_id' => 'id']);
     }
 }
