@@ -6,6 +6,7 @@ use app\models\Post;
 use app\models\PostSearch;
 use app\models\PostTag;
 use app\models\Tag;
+use app\models\UserTbl;
 use yii\base\BaseObject;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -44,6 +45,8 @@ class PostController extends Controller
 
         $searchModel = new PostSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
+        $tags = (new \yii\db\Query())->select(['*'])->from('post_tag')->all();
+
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -59,8 +62,11 @@ class PostController extends Controller
      */
     public function actionView($id)
     {
+        $post = $this->findModel($id);
+//        var_dump($post->author->username);die();
+//        $post->author_id = $post->author->username;
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $post,
         ]);
     }
 
@@ -71,6 +77,7 @@ class PostController extends Controller
      */
     public function actionCreate()
     {
+        //var_dump(Post::findOne(30)->getTags()->all());die();
         $model = new Post();
         $tags = (new \yii\db\Query())->select(['*'])->from('tag')->all();
         if ($this->request->isPost) {

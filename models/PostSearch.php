@@ -62,9 +62,11 @@ class PostSearch extends Post
             'author_id' => $this->author_id,
             'created_at' => $this->created_at,
         ]);
-
+//        var_dump($this->getAuthor());die();
+//        $Post->joinWith(['post_tag'])->joinWith(['tag']);
         $query->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'body', $this->body]);
+
 
         return $dataProvider;
     }

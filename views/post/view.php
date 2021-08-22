@@ -16,25 +16,54 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
+
     </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'author_id',
-            'title',
-            'body:ntext',
-            'created_at',
-        ],
-    ]) ?>
+    <div class="card mb-3">
+        <div class="card-body">
+            <h2 class="card-title">title : <?php echo $model->title; ?></h2>
+            <h5 class="card-author">author : <?php echo $model->author->username; ?></h5>
+            <h5 class="card-title">tags : </h5>
+                    <?php foreach ($model->tags as $tag){?>
+                    <h5>  <span  style="float: left" class="badge badge-danger"><?php echo $tag->title; ?></span></h5>
+                    <?php }  ?>
+
+            <br>
+            <hr>
+            <p class="card-text"><?php echo $model->body; ?></p>
+            <hr>
+            <p class="card-text"><small class="text-muted"><?php echo $model->created_at; ?></small></p>
+        </div>
+    </div>
 
 </div>
+
+<br>
+<hr>
+<br>
+<h3>Comments :</h3>
+
+
+<p>
+    <?= Html::a('Create Comment', ['comment/create','postID' => $model->id], ['class' => 'btn btn-success' ]) ?>
+    <?php
+
+    ?>
+
+</p>
+
+<?php
+    foreach ($model->comments as $comment){
+?>
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">author : <?php echo $comment->author->username; ?></h5>
+        <hr>
+        <p class="card-text"><?php echo $comment->body; ?></p>
+        <hr>
+        <p class="card-text"><small class="text-muted"> <?php echo $comment->created_at; ?></small></p>
+    </div>
+</div>
+<?php
+    }
+?>

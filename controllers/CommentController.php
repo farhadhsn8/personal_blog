@@ -80,11 +80,11 @@ class CommentController extends Controller
 
         if ($this->request->isPost) {
             $model->author_id = \Yii::$app->user->identity->id;
-            $model->post_id = 22;
+            $model->post_id = $this->request->get('postID') ;
             $model->verified = 0;
             $model->created_at = date('Y-m-d H:i:s');
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['post/view', 'id' => $model->post_id]);
             }
         } else {
             $model->loadDefaultValues();
