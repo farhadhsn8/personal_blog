@@ -28,16 +28,15 @@ AppAsset::register($this);
 <header>
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
+        'brandLabel' => 'HELLO',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
         ],
     ]);
     $navItem = [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
+
+
         ];
     if( Yii::$app->user->isGuest){
         array_push($navItem,['label' => 'Login', 'url' => ['/site/login']] ,
@@ -54,8 +53,8 @@ AppAsset::register($this);
             . Html::endForm()
             . '</li>' ,
             ['label' => 'Post', 'url' => ['/post']],
-            ['label' => 'Tag', 'url' => ['/tag']],
-            ['label' => 'Comment', 'url' => ['/comment']]
+            ['label' => 'Management', 'url' => ['/tag']],
+
         );
     }
 

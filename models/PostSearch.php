@@ -14,11 +14,16 @@ class PostSearch extends Post
     /**
      * {@inheritdoc}
      */
+
+    public $tags;
+
+
     public function rules()
     {
         return [
             [['id', 'author_id'], 'integer'],
-            [['title', 'body', 'created_at'], 'safe'],
+            [['title', 'body', 'created_at' , 'tags->title'], 'safe'],
+            [['tags'], 'safe'],
         ];
     }
 
@@ -64,8 +69,17 @@ class PostSearch extends Post
         ]);
 //        var_dump($this->getAuthor());die();
 //        $Post->joinWith(['post_tag'])->joinWith(['tag']);
+
+
+//        $items = [];
+//        foreach($this->tags as $tag){
+//            $items[] = $tag->title;
+//        }
+//        $tags = implode(' , ', $items);
+
         $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'body', $this->body]);
+            ->andFilterWhere(['like', 'body', $this->body])
+            ->andFilterWhere(['like', 'tags',  $this->tags]);
 
 
         return $dataProvider;

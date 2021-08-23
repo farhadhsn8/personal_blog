@@ -45,10 +45,16 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 <p>
-    <?= Html::a('Create Comment', ['comment/create','postID' => $model->id], ['class' => 'btn btn-success' ]) ?>
-    <?php
 
-    ?>
+    <?php
+    if(! Yii::$app->user->isGuest){  ?>
+    <p>
+    <?= Html::a('Create Comment', ['comment/create','postID' => $model->id], ['class' => 'btn btn-success' ]) ?>
+    </p>
+<?php } ?>
+
+
+
 
 </p>
 
