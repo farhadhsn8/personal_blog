@@ -52,8 +52,8 @@ AppAsset::register($this);
             )
             . Html::endForm()
             . '</li>' ,
-            ['label' => 'Post', 'url' => ['/post']],
-            ['label' => 'Management', 'url' => ['/tag']],
+            ['label' => 'Comment verification', 'url' => ['/comment']],
+            ['label' => ' Tags Management', 'url' => ['/tag']],
 
         );
     }

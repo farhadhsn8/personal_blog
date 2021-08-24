@@ -84,7 +84,8 @@ class PostController extends Controller
             $model->author_id = \Yii::$app->user->identity->id;
             $model->created_at = date('Y-m-d H:i:s');
             $model->load($this->request->post());
-            if ($model->save(false)) {
+            if ($model->save() && !empty($this->request->post()['Post']['tags']) ) {
+
                 foreach ($this->request->post()['Post']['tags'] as $tag) {
                     $post_tag = new PostTag([
                         'post_id' => $model->id,

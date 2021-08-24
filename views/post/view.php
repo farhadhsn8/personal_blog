@@ -60,6 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php
     foreach ($model->comments as $comment){
+        if ($comment->verified){
 ?>
 <div class="card mb-3">
     <div class="card-body">
@@ -71,5 +72,6 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 <?php
+    }
     }
 ?>

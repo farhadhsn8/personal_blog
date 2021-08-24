@@ -13,19 +13,42 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Comment', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+
 
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'author_id',
-            'post_id',
+
+            [
+                'attribute' => 'post.title',
+                'format' => 'text',
+                'label' => 'post_title',
+                'value' =>function($model){
+                    return $model->post->title;
+                }
+            ],
+
+            [
+                'attribute' => 'author.username',
+                'format' => 'text',
+                'label' => 'author',
+                'value' =>function($model){
+                    return $model->author->username;
+                }
+            ],
             'body:ntext',
-            'verified',
+            [
+                'attribute' => 'verified',
+                'format' => 'text',
+                'label' => 'verified',
+                'value' =>function($model){
+                    if($model->verified)
+                        return   "verified" ;
+                    return "rejected";
+                }
+            ],
             'created_at',
 
             ['class' => 'yii\grid\ActionColumn'],
