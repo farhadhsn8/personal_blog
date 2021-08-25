@@ -3,8 +3,10 @@
 namespace app\controllers;
 
 use app\models\Comment;
+use yii\base\BaseObject;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -37,23 +39,29 @@ class CommentController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Comment::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+//        var_dump(\Yii::$app->user->can('confirm-comments'));die();
+            if(\Yii::$app->user->id == 1){
+            $dataProvider = new ActiveDataProvider([
+                'query' => Comment::find(),
+                /*
+                'pagination' => [
+                    'pageSize' => 50
+                ],
+                'sort' => [
+                    'defaultOrder' => [
+                        'id' => SORT_DESC,
+                    ]
+                ],
+                */
+            ]);
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'dataProvider' => $dataProvider,
+            ]);
+        }else{
+            throw new ForbiddenHttpException;
+        }
+
     }
 
     /**
@@ -104,15 +112,20 @@ class CommentController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if(\Yii::$app->user->id == 1){
+            $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }else{
+            throw new ForbiddenHttpException;
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
