@@ -7,6 +7,8 @@ use app\models\TagSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\ForbiddenHttpException;
+
 
 /**
  * TagController implements the CRUD actions for Tag model.
@@ -37,6 +39,15 @@ class TagController extends Controller
      */
     public function actionIndex()
     {
+        if (\Yii::$app->user->isGuest) {
+            throw new ForbiddenHttpException;
+        }
+        if (is_null(\Yii::$app->user->identity->role )) {
+            throw new ForbiddenHttpException;
+        }
+        if (!\Yii::$app->user->identity->role->role_name == 'admin') {
+            throw new ForbiddenHttpException;
+        }
         $searchModel = new TagSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
@@ -54,6 +65,15 @@ class TagController extends Controller
      */
     public function actionView($id)
     {
+        if (\Yii::$app->user->isGuest) {
+            throw new ForbiddenHttpException;
+        }
+        if (is_null(\Yii::$app->user->identity->role )) {
+            throw new ForbiddenHttpException;
+        }
+        if (!\Yii::$app->user->identity->role->role_name == 'admin') {
+            throw new ForbiddenHttpException;
+        }
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -66,6 +86,15 @@ class TagController extends Controller
      */
     public function actionCreate()
     {
+        if (\Yii::$app->user->isGuest) {
+            throw new ForbiddenHttpException;
+        }
+        if (is_null(\Yii::$app->user->identity->role )) {
+            throw new ForbiddenHttpException;
+        }
+        if (!\Yii::$app->user->identity->role->role_name == 'admin') {
+            throw new ForbiddenHttpException;
+        }
         $model = new Tag();
 
         if ($this->request->isPost) {
@@ -91,6 +120,15 @@ class TagController extends Controller
      */
     public function actionUpdate($id)
     {
+        if (\Yii::$app->user->isGuest) {
+            throw new ForbiddenHttpException;
+        }
+        if (is_null(\Yii::$app->user->identity->role )) {
+            throw new ForbiddenHttpException;
+        }
+        if (!\Yii::$app->user->identity->role->role_name == 'admin') {
+            throw new ForbiddenHttpException;
+        }
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -111,6 +149,15 @@ class TagController extends Controller
      */
     public function actionDelete($id)
     {
+        if (\Yii::$app->user->isGuest) {
+            throw new ForbiddenHttpException;
+        }
+        if (is_null(\Yii::$app->user->identity->role )) {
+            throw new ForbiddenHttpException;
+        }
+        if (!\Yii::$app->user->identity->role->role_name == 'admin') {
+            throw new ForbiddenHttpException;
+        }
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

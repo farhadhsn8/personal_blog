@@ -11,7 +11,7 @@ use yii\base\BaseObject;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\web\ForbiddenHttpException;
 /**
  * PostController implements the CRUD actions for Post model.
  */
@@ -78,6 +78,11 @@ class PostController extends Controller
     public function actionCreate()
     {
         //var_dump(Post::findOne(30)->getTags()->all());die();
+
+        if (\Yii::$app->user->isGuest) {
+            throw new ForbiddenHttpException;
+        }
+
         $model = new Post();
         $tags = (new \yii\db\Query())->select(['*'])->from('tag')->all();
         if ($this->request->isPost) {
@@ -112,6 +117,15 @@ class PostController extends Controller
      */
     public function actionUpdate($id)
     {
+        if (\Yii::$app->user->isGuest) {
+            throw new ForbiddenHttpException;
+        }
+        if (is_null(\Yii::$app->user->identity->role )) {
+            throw new ForbiddenHttpException;
+        }
+        if (!\Yii::$app->user->identity->role->role_name == 'admin') {
+            throw new ForbiddenHttpException;
+        }
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -132,6 +146,15 @@ class PostController extends Controller
      */
     public function actionDelete($id)
     {
+        if (\Yii::$app->user->isGuest) {
+            throw new ForbiddenHttpException;
+        }
+        if (is_null(\Yii::$app->user->identity->role )) {
+            throw new ForbiddenHttpException;
+        }
+        if (!\Yii::$app->user->identity->role->role_name == 'admin') {
+            throw new ForbiddenHttpException;
+        }
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

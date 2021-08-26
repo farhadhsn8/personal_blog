@@ -39,28 +39,36 @@ class CommentController extends Controller
      */
     public function actionIndex()
     {
-//        var_dump(\Yii::$app->user->can('confirm-comments'));die();
-            if(\Yii::$app->user->id == 1){
-            $dataProvider = new ActiveDataProvider([
-                'query' => Comment::find(),
-                /*
-                'pagination' => [
-                    'pageSize' => 50
-                ],
-                'sort' => [
-                    'defaultOrder' => [
-                        'id' => SORT_DESC,
-                    ]
-                ],
-                */
-            ]);
-
-            return $this->render('index', [
-                'dataProvider' => $dataProvider,
-            ]);
-        }else{
+//        var_dump(\Yii::$app->user->identity->role);
+//        echo \Yii::$app->user->identity->role;
+//        die();
+        if (\Yii::$app->user->isGuest) {
             throw new ForbiddenHttpException;
         }
+        if (is_null(\Yii::$app->user->identity->role)) {
+            throw new ForbiddenHttpException;
+        }
+        if (!\Yii::$app->user->identity->role->role_name == 'admin') {
+            throw new ForbiddenHttpException;
+        }
+        $dataProvider = new ActiveDataProvider([
+            'query' => Comment::find(),
+            /*
+            'pagination' => [
+                'pageSize' => 50
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'id' => SORT_DESC,
+                ]
+            ],
+            */
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
+
 
     }
 
@@ -84,11 +92,15 @@ class CommentController extends Controller
      */
     public function actionCreate()
     {
+        if (\Yii::$app->user->isGuest) {
+            throw new ForbiddenHttpException;
+        }
+
         $model = new Comment();
 
         if ($this->request->isPost) {
             $model->author_id = \Yii::$app->user->identity->id;
-            $model->post_id = $this->request->get('postID') ;
+            $model->post_id = $this->request->get('postID');
             $model->verified = 0;
             $model->created_at = date('Y-m-d H:i:s');
             if ($model->load($this->request->post()) && $model->save()) {
@@ -112,21 +124,26 @@ class CommentController extends Controller
      */
     public function actionUpdate($id)
     {
-        if(\Yii::$app->user->id == 1){
-            $model = $this->findModel($id);
-
-            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }else{
+        if (\Yii::$app->user->isGuest) {
             throw new ForbiddenHttpException;
         }
+        if (is_null(\Yii::$app->user->identity->role)) {
+            throw new ForbiddenHttpException;
+        }
+        if (!\Yii::$app->user->identity->role->role_name == 'admin') {
+            throw new ForbiddenHttpException;
+        }
+        $model = $this->findModel($id);
 
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
+
 
     /**
      * Deletes an existing Comment model.
@@ -137,6 +154,15 @@ class CommentController extends Controller
      */
     public function actionDelete($id)
     {
+        if (\Yii::$app->user->isGuest) {
+            throw new ForbiddenHttpException;
+        }
+        if (is_null(\Yii::$app->user->identity->role )) {
+            throw new ForbiddenHttpException;
+        }
+        if (!\Yii::$app->user->identity->role->role_name == 'admin') {
+            throw new ForbiddenHttpException;
+        }
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

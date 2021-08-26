@@ -97,4 +97,9 @@ class UserTbl extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return $this->hasMany(Post::class, ['author_id' => 'id']);
     }
 
+    public function getRole()
+    {
+        return $this->hasOne(Role::class, ['user_id' => 'id']);
+    }
+
 }
